@@ -11,9 +11,9 @@ let express     = require("express"),
     User        = require("./models/users"),
     seedDB      = require("./seed");
 
-let campgroundRoutes = require("./routes/campground")
-let commentRoutes = require("./routes/comment")
-let indexRoutes = require("./routes/index")
+let campgroundRoutes = require("./routes/campground");
+let commentRoutes = require("./routes/comment");
+let indexRoutes = require("./routes/index");
 
 //Seed the DB
 // seedDB();
@@ -43,15 +43,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine","ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
-// mongoose.connect("mongodb://localhost:27017/yelp_camp", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
-// mongoose.connect("mongodb+srv://sachin:semwal@cluster0-libmt.mongodb.net/yelpcamp?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
-mongoose.connect(process.env.DATABASEURL,  {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+let url = process.env.DATABASEURL || "mongodb://localhost:27017/yelp_camp"
+mongoose.connect(url,  {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
 app.use("/campgrounds",campgroundRoutes);
 app.use("/campgrounds/:id/comments",commentRoutes);
 app.use(indexRoutes);
 
-
-app.listen(process.env.PORT, process.env.IP, function(req, res){
+app.listen(process.env.PORT || 3000, process.env.IP || "127.0.0.1", function(req, res){
     console.log("YelpCamp app has started!");
 });
